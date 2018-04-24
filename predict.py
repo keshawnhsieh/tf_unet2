@@ -48,7 +48,7 @@ def main(flags):
     label_pred = label_pred[:, :, 0]
     label_pred[np.where(label_pred >= 0.5)] = 1
     label_pred[np.where(label_pred < 0.5)] = 0
-    label_pred.astype(np.uint8)
+    label_pred = label_pred.astype(np.uint8)
 
     prd_name = "%s_m%s_prd.tif" % (image.split('.')[0], model.split('.')[0][-2:])
     write_img(prd_name, proj, geotrans, label_pred)
