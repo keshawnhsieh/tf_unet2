@@ -1,9 +1,6 @@
 import numpy as np
 import scipy.signal
-import gc
 import matplotlib.pyplot as plt
-from tqdm import tqdm
-
 
 def _spline_window(window_size, power=2):
     """
@@ -86,7 +83,7 @@ def predict_img_with_smooth_windowing(input_img, window_size, subdivisions, batc
     x_len = (padx_len-window_size)//step + 1
     y_len = (pady_len-window_size)//step + 1
 
-    for batch_first in tqdm(range(0, x_len*y_len, batch_size)):
+    for batch_first in range(0, x_len*y_len, batch_size):
         batch_last = batch_first + batch_size
         # print batch_first
         if batch_last > x_len*y_len:
