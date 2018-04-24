@@ -42,7 +42,7 @@ def build(image,
           label,
           exp_dir,
           size=256,
-          scale=2,
+          scale=5,
           threshold=0.05):
     def save_png(image, name):
         Image.fromarray(image).save(name)
@@ -116,6 +116,11 @@ def main(flags):
                               exp_dir,
                               size=flags.size,
                               threshold=flags.threshold))
+
+    # shuffle
+    perm = np.arange(len(dps_list))
+    np.random.shuffle(perm)
+    dps_list = np.array(dps_list)[perm]
 
     # export train.csv
     tmp = pd.DataFrame(dps_list)
