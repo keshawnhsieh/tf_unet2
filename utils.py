@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
+import gdal
 
 # colour map
 label_colours = [(0,0,0)
@@ -49,3 +50,54 @@ def decode_images(image, num_images=1):
         outputs[0, :, :, i] = scalared.astype(np.uint8)
 
     return outputs
+
+def read_img(file_name):
+    image = gdal.Open(file_name)
+
+    im_width = image.RasterXSize
+    im_height = image.RasterYSize
+
+    im_geotrans = image.GetGeoTransform()
+    im_proj = image.GetProjection()
+    im_data = image.ReadAsArray(0, 0, im_width, im_height)
+    if len(im_data.shape) == 3:
+        im_data = im_data.transpose(1, 2, 0)
+
+    del image
+    return im_proj, im_geotrans, im_data
+
+def write_img(file_name, im_proj, im_geotrans, im_data):
+    if 'uint8' in im_data.dtype.name:
+        datatype = gdal.GDT_Byte
+        # print 'uint8'
+    elif 'int8' in im_data.dtype.name:
+        datatype = gdal.GDT_Byte
+    elif 'int16' in im_data.dtype.name:
+        datatype = gdal.GDT_UInt16
+    else:
+        datatype = gdal.GDT_Float32
+
+    if len(im_data.shape) == 3:
+        im_data = im_data.transpose(2, 0, 1)
+        im_bands, im_height, im_width = im_data.shape
+    else:
+        im_bands, (im_height, im_width) = 1, im_data.shape
+
+    driver = gdal.GetDriverByName("GTiff")
+    dataset = driver.Create(
+        file_name,
+        im_width,
+        im_height,
+        im_bands,
+        datatype)
+
+    dataset.SetGeoTransform(im_geotrans)
+    dataset.SetProjection(im_proj)
+
+    if im_bands == 1:
+        dataset.GetRasterBand(1).WriteArray(im_data)
+    else:
+        for i in range(im_bands):
+            dataset.GetRasterBand(i + 1).WriteArray(im_data[i])
+
+    del dataset
