@@ -71,6 +71,7 @@ def build(image,
         image_name = "%s/data/%s_%s_%s.png" % (exp_dir, obj.split(".")[0], xs, ys)
         save_png(roi_image, image_name)
 
+        roi_label = np.asarray(roi_label * 255, np.uint8)
         label_name = "%s/data/%s_%s_%s_mask.png" % (exp_dir, obj.split(".")[0], xs, ys)
         save_png(roi_label, label_name)
         dsp_list.append([image_name, label_name])
