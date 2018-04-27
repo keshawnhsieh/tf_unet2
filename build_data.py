@@ -97,6 +97,10 @@ def main(flags):
     image_list.remove(eval_image)
     label_list.remove(eval_label)
 
+    # sort image/label list in same order
+    image_list = sorted(image_list)
+    label_list = sorted(label_list)
+
     # create experiment directory
     exp_dir = flags.exp_dir.strip("/")
     if os.path.exists(exp_dir):
