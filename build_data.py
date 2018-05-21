@@ -68,6 +68,7 @@ def build(image,
                 break
 
         roi_image = get_roi(image, xs, ys, size)
+        roi_image = np.asarray(roi_image, np.uint8)
         image_name = "%s/data/%s_%s_%s.png" % (exp_dir, obj.split(".")[0], xs, ys)
         save_png(roi_image, image_name)
 
