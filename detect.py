@@ -19,7 +19,7 @@ def read_flags():
         "save_dir", help="Where to save result")
 
     parser.add_argument(
-        "--gpu", type=int, default=1, help="GPU number")
+        "--gpu", type=int, default=0, help="GPU number")
 
     return parser.parse_args()
 
@@ -33,9 +33,9 @@ def main(flags):
     model = flags.model
     abs_path, _ = os.path.split(os.path.abspath(__file__))
     model_map = {
-        "1m": abs_path + "/lcr_who_thr2/models/model-10.ckpt",
-        "0.3m": abs_path + "/models/model-10.ckpt",
-        "0.5m": abs_path + "/models/model-10.ckpt",
+        "1m": abs_path + "/model/1m/model-99.ckpt",
+        "0.3m": abs_path + "/model/0.3m/model-99.ckpt",
+        "0.5m": abs_path + "/model/0.5m/model-99.ckpt",
     }
     model = model_map[model]
 
